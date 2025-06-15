@@ -1,85 +1,89 @@
 ---
 layout: post
-title: "How to Install Cursor AppImage on Linux (Without FUSE)"
+title: "✨ Easiest Way to Run Cursor on Linux (No FUSE Needed)"
 date: 2025-06-15
 categories: [Linux, AppImage, Cursor]
 ---
 
-> 📅 Updated: June 2025  
+> 📅 Last updated: June 2025  
 > ✍️ Author: Hassan Rasool  
-> 📎 Use case: Run the AI-powered Cursor editor on Linux (Ubuntu, Debian, Arch, etc.) even though it’s not officially supported.
+> 🧑‍💻 TL;DR: Download the AppImage, copy-paste this script, and you’re done!
 
 ---
 
-### 🚀 Overview
+### 🚀 Yes, You Can Use Cursor on Linux!
 
-[Cursor](https://www.cursor.com/) is a powerful, AI-enhanced code editor based on VS Code. As of now, it doesn’t have official Linux support — only Windows and macOS binaries are available.
+[Cursor](https://www.cursor.so/) is an amazing AI-first code editor built on VS Code — but sadly, there's no official Linux version yet.
 
-But if you’ve downloaded the Cursor AppImage, **you can still run it on Linux** by extracting it, fixing the Chrome sandbox permissions, and creating a `.desktop` file for launcher integration.
+The good news? **It takes less than 2 minutes to make it work perfectly on Linux.** Just:
+
+1. Download the latest `.AppImage` from [cursor.so/download](https://www.cursor.so/download)
+2. Run the script below
+3. Boom — Cursor launches like a native app 🎉
 
 ---
 
 ### ✅ What This Script Does
 
-- Uses your already-downloaded `.AppImage` file
-- Extracts the contents (bypassing FUSE)
-- Fixes sandbox issues for Electron/Chromium
-- Adds Cursor to your application launcher
-
+- Extracts the AppImage (so you don’t need FUSE)
+- Fixes sandbox permissions (so it doesn’t crash)
+- Adds Cursor to your launcher (so you can search & open it easily)
+- Automatically adds the app icon (so you don't have to)
 ---
 
-### 📜 Installation Script
+### 📜 One-Command Setup Script
+
+Just copy and paste this into your terminal:
 
 ```bash
 #!/bin/bash
 
+# 🚀 Super simple Cursor setup for Linux
 set -e
 
 APP_NAME="cursor"
 INSTALL_DIR="$HOME/.local/bin/$APP_NAME"
 DESKTOP_FILE="$HOME/.local/share/applications/$APP_NAME.desktop"
-APPIMAGE_PATH="$HOME/Downloads/Cursor-1.0.0-x86_64.AppImage"  # Update if yours is in a different location
+APPIMAGE_PATH="$HOME/Downloads/Cursor-*.AppImage"
 
-echo "🛠️ Cursor AppImage Linux Installer (local version)"
+echo "✨ Installing Cursor..."
 
-if [ ! -f "$APPIMAGE_PATH" ]; then
-  echo "❌ File not found: $APPIMAGE_PATH"
+# Make sure the AppImage exists
+APPIMAGE_FILE=$(ls $APPIMAGE_PATH 2>/dev/null | head -n 1)
+if [ ! -f "$APPIMAGE_FILE" ]; then
+  echo "❌ Could not find Cursor AppImage at $APPIMAGE_PATH"
+  echo "📦 Download it from: https://www.cursor.so/download"
   exit 1
 fi
 
-# Step 1: Extract AppImage
-chmod +x "$APPIMAGE_PATH"
+# Extract AppImage
+chmod +x "$APPIMAGE_FILE"
 mkdir -p "$INSTALL_DIR"
-"$APPIMAGE_PATH" --appimage-extract
+"$APPIMAGE_FILE" --appimage-extract
 mv squashfs-root/* "$INSTALL_DIR"
 
-# Step 2: Fix chrome-sandbox permissions
-CHROME_SANDBOX_PATH=$(find "$INSTALL_DIR" -type f -name chrome-sandbox | head -n 1)
-
-if [ -n "$CHROME_SANDBOX_PATH" ]; then
-  echo "🔐 Fixing chrome-sandbox at: $CHROME_SANDBOX_PATH"
-  sudo chown root:root "$CHROME_SANDBOX_PATH"
-  sudo chmod 4755 "$CHROME_SANDBOX_PATH"
-else
-  echo "⚠️ Could not find chrome-sandbox binary. Skipping sandbox fix."
+# Fix chrome-sandbox permissions
+if [ -f "$INSTALL_DIR/chrome-sandbox" ]; then
+  echo "🔐 Fixing sandbox..."
+  sudo chown root:root "$INSTALL_DIR/chrome-sandbox"
+  sudo chmod 4755 "$INSTALL_DIR/chrome-sandbox"
 fi
 
-# Step 3: Create .desktop launcher
-mkdir -p "$(dirname "$DESKTOP_FILE")"
+# Find a good icon
 ICON_PATH="$INSTALL_DIR/cursor.png"
-
 ICON_CANDIDATES=(
   "$INSTALL_DIR/usr/share/icons/hicolor/512x512/apps/cursor.png"
   "$INSTALL_DIR/resources/app/assets/icon.png"
 )
-
-for candidate in "${ICON_CANDIDATES[@]}"; do
-  if [ -f "$candidate" ]; then
-    cp "$candidate" "$ICON_PATH"
+for icon in "${ICON_CANDIDATES[@]}"; do
+  if [ -f "$icon" ]; then
+    cp "$icon" "$ICON_PATH"
     break
   fi
 done
 
+# Create .desktop launcher
+mkdir -p "$(dirname "$DESKTOP_FILE")"
 cat > "$DESKTOP_FILE" <<EOF
 [Desktop Entry]
 Name=Cursor
@@ -94,9 +98,37 @@ update-desktop-database ~/.local/share/applications
 
 echo "✅ Done! You can now launch Cursor from your app menu or by running:"
 echo "$INSTALL_DIR/AppRun"
+````
+
+---
+
+### 📎 Or Download It Directly
+
+Right-click & save this:
+👉 [install-cursor.sh](https://HassanRasoo98.github.io/downloads/install-cursor.sh)
+
+Then just run:
+
+```bash
+chmod +x install-cursor.sh
+./install-cursor.sh
 ```
 
-### 🧠 Notes
-- The script bypasses the need for FUSE by extracting the AppImage manually.
-- The chrome-sandbox binary needs setuid permissions (4755) or Cursor/Electron will crash.
-- Customize the APPIMAGE_PATH variable if needed.
+---
+
+### 🧠 Notes & Tips
+
+* **No root needed**, except for fixing the sandbox once
+* If you update Cursor, just re-run this script with the new `.AppImage`
+* This script works with almost any modern Linux distro
+
+---
+
+### 💬 Questions? Feedback?
+
+Feel free to comment or share this link! You can also tweak the script for advanced setups or create a pull request to improve it 💡
+
+---
+
+Let me know if you'd like me to generate the actual `.sh` file and folder structure so you can upload it to GitHub Pages as a downloadable file.
+
