@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "✨ Easiest Way to Run Cursor on Linux (No FUSE Needed)"
+title: "✨ Easiest Way to Run Cursor on Linux (2025)"
 date: 2025-06-15
 categories: [Linux, AppImage, Cursor]
 ---
