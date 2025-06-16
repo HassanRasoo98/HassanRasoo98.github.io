@@ -128,7 +128,3 @@ chmod +x install-cursor.sh
 
 Feel free to comment or share this link! You can also tweak the script for advanced setups or create a pull request to improve it 💡
 
----
-
-Let me know if you'd like me to generate the actual `.sh` file and folder structure so you can upload it to GitHub Pages as a downloadable file.
-
