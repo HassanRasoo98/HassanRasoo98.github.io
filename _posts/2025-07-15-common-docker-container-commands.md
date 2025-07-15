@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Common Docker Container Commands Reference"
-date: 2024-03-19
+date: 2025-07-15
 categories: docker containers devops
 ---
 
@@ -11,19 +11,21 @@ This post serves as a quick reference for common Docker container commands. The 
 
 ## Container Commands
 
-| Container | Description | Command |
-|-----------|-------------|---------|
-| n8n | Self-hosted workflow automation tool | ```bash
-# Create a persistent volume
-docker volume create n8n_data
+### n8n (Workflow Automation Tool)
 
-# Run n8n container
+**Create persistent volume:**
+```bash
+docker volume create n8n_data
+```
+
+**Run container:**
+```bash
 docker run -it --rm \
   --name n8n \
   -p 5678:5678 \
   -v n8n_data:/home/node/.n8n \
   docker.n8n.io/n8nio/n8n
-``` |
+```
 
 ## Notes
 
