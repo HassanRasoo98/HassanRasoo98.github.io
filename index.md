@@ -1,6 +1,6 @@
 ---
 layout: home
-title: My Blog
+title: Hassan Rasool
 ---
 
 Welcome to my blog!
